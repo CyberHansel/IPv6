@@ -30,7 +30,28 @@ SOLUTION - The IPv6 standard establishes a timeout mechanism with a default time
 SOLUTION - The solution is already available in the standards, to make sure IPv6 nodes support RFC6946(opens in a new tab). This establishes that atomic fragments have to be processed in isolation from any other packets and fragments.
 
 
->>>>>>>>>>>>>>>  IPSEC <<<<<<<<<<<<<<
+>>>>>>>>>>>>>>>  ICMPv6 <<<<<<<<<<<<<<
+
+ICMPv6 is used for many IPv6 related protocols, like NDP or MLD. For example, without NDP and its Address Resolution mechanism, it is not possible to discover the layer two address, making it impossible to send a packet to a neighbour or gateway router.
+FILTERING WRONGLY ICMPv6 CAN BREAK IPv6
+
+RECOMENDATION WHAT TO DO
+
+RECOMENDATION 1      -The ICMPv6 Specification RFC4443 says that no ICMPv6 error messages should be sent in response to receiving a packet destined to a multicast address. (opens in a new tab)This avoids using ICMPv6 to discover hosts and being used as an amplification attack.
+
+RECOMENDATION 2      -If an ICMPv6 informational message of unknown type is received, it must be silently discarded. This way, ICMPv6 can not be leveraged to discover hosts.
+
+RECOMENDATION 3      -An ICMPv6 error message must not originate as a result of receiving the following: A packet sent as a link-layer multicast or as a link-layer broadcast
+
+RECOMENDATION 4      -An ICMPv6 error message must not originate as a result of receiving the following: A packet whose source address does not uniquely identify a single node e.g. an IPv6 Unspecified Address, IPv6 multicast address, or an address known by the ICMP message originator as an IPv6 anycast address
+
+TWO EXCEPTIONS        of receiving a packet destined to an IPv6 multicast address or a packet sent as a link-layer multicast or as a link-layer broadcast:
+1 EXCEPTION The Packet Too Big Message [RFC4443_section3.2(opens in a new tab)] to allow Path MTU discovery to work for IPv6 multicast.
+2 EXCEPTION The Parameter Problem Message, Code 2 [RFC4443_section3.4] reporting an unrecognised IPv6 option [RFC2460_section4.2] that has the Option Type highest-order two bits set to 10.
+
+
+
+
 
 
 
