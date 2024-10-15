@@ -1,6 +1,9 @@
 SOLUTION TO ATTACK
 
->>>>>>>>>>>>>>>  IPV6 BASIC HEADERS <<<<<<<<<<<<<<
+>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<
+>>>>>>>>>>>>>>>  IPV6 BASIC HEADERS <<<<<<<<<<<<<<<<<<
+>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 
 1. threat IP spoofing           -Changing IPv6 header Source Address field or IP spoofing. 
 SOLUTION - Ingress Filtering [RFC2827 / BCP38(opens in a new tab)] and unicast Reverse Path Forwarding (uRPF) [RFC3704 / BCP84(opens in a new tab)]. These techniques filter packets received by a router based on their source address, denying packets that come from addresses not to be used on that network.
@@ -9,7 +12,10 @@ SOLUTION - Ingress Filtering [RFC2827 / BCP38(opens in a new tab)] and unicast R
 SOLUTION  -  Intrusion Detection System (IDS) and Intrusion Prevention System (IPS) can be used to inspect packets. This allows you to inspect traffic and detect unusual or unexpected values in some fields, like for example the values in the flow label, which is expected to be 0 (zero).
 
 
+>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<
 >>>>>>>>>>>>>>>  IPV6 EXTENSION HEADERS <<<<<<<<<<<<<<
+>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 
 1. threat Routing Header type 0, RH0 -Do not use RH0 or do not allow the use of it. This can be achieved by ensuring that your IPv6 nodes follow RFC5095(opens in a new tab), i.e., the support for RH0 is removed. Extra operational measures can be used: Ingress filtering at the site border, and firewall policies that filter packets using RH0.
 --------------------------------------------------------------------------------------------------------
@@ -30,7 +36,10 @@ SOLUTION - The IPv6 standard establishes a timeout mechanism with a default time
 SOLUTION - The solution is already available in the standards, to make sure IPv6 nodes support RFC6946(opens in a new tab). This establishes that atomic fragments have to be processed in isolation from any other packets and fragments.
 
 
->>>>>>>>>>>>>>>  ICMPv6 <<<<<<<<<<<<<<
+>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<
+>>>>>>>>>>>>>>>>>>>>>>>  ICMPv6 <<<<<<<<<<<<<<<<<<<<<<
+>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 
 ICMPv6 is used for many IPv6 related protocols, like NDP or MLD. For example, without NDP and its Address Resolution mechanism, it is not possible to discover the layer two address, making it impossible to send a packet to a neighbour or gateway router.
 FILTERING WRONGLY ICMPv6 CAN BREAK IPv6
@@ -38,21 +47,24 @@ FILTERING WRONGLY ICMPv6 CAN BREAK IPv6
 RECOMENDATION WHAT TO DO
 
 RECOMENDATION 1      -The ICMPv6 Specification RFC4443 says that no ICMPv6 error messages should be sent in response to receiving a packet destined to a multicast address. (opens in a new tab)This avoids using ICMPv6 to discover hosts and being used as an amplification attack.
-
+--------------------------------------------------------------------------------------------------------
 RECOMENDATION 2      -If an ICMPv6 informational message of unknown type is received, it must be silently discarded. This way, ICMPv6 can not be leveraged to discover hosts.
-
+--------------------------------------------------------------------------------------------------------
 RECOMENDATION 3      -An ICMPv6 error message must not originate as a result of receiving the following: A packet sent as a link-layer multicast or as a link-layer broadcast
-
+--------------------------------------------------------------------------------------------------------
 RECOMENDATION 4      -An ICMPv6 error message must not originate as a result of receiving the following: A packet whose source address does not uniquely identify a single node e.g. an IPv6 Unspecified Address, IPv6 multicast address, or an address known by the ICMP message originator as an IPv6 anycast address
 
 TWO EXCEPTIONS        of receiving a packet destined to an IPv6 multicast address or a packet sent as a link-layer multicast or as a link-layer broadcast:
 1 EXCEPTION The Packet Too Big Message [RFC4443_section3.2(opens in a new tab)] to allow Path MTU discovery to work for IPv6 multicast.
 2 EXCEPTION The Parameter Problem Message, Code 2 [RFC4443_section3.4] reporting an unrecognised IPv6 option [RFC2460_section4.2] that has the Option Type highest-order two bits set to 10.
-
+--------------------------------------------------------------------------------------------------------
 RECPMENDATION 5      -IPv6 node must limit the rate of the ICMPv6 error messages it originates. This situation may occur when a source sending a stream of erroneous packets fails to listen to the resulting ICMPv6 error messages. 
 
 
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 >>>>>>>>>>>>>>>  Neighbor Discovery Protocol (NDP) <<<<<<<<<<<<<<
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 
 When talking about NDP, it's in the context of a link where attached nodes are neighbors. These nodes could be hosts or routers.
 NDP is used on a link for:
@@ -70,7 +82,42 @@ For all these NDP uses, only five messages are defined:
 4. Router Advertisement (RA) is sent to:    Answer an RS message. Inform the hosts in the network  periodically about network information and parameters.
 5. Redirect is used to:                     Change routing entries on hosts, to send all or part of the traffic to another gateway.
 
+SECURITY
 
+1. threat    Neighbor Solicitation (NS) or Neighbor Advertisement (NA) Spoofing [RFC3756(opens in a new tab)].
+-- The attacker sends an NS with a changed/wrong “source link-layer” option (the option used to inform other neighbors about a link-layer address).
+-- The attacker sends an NA with a changed/wrong “target link-layer” option (the option that includes information about the sender's link-layer).
+The sending of the NA could be after seeing an NS sent by a neighbor, or can even be sent in an unsolicited way to explain about a change in information (this is included in the standard and has to be accepted by IPv6 hosts. It is the same in IPv4 with ARP).
+
+In both cases, the attacker gets a wrong entry in the victim's neighbor cache, with a wrong link-layer address. This can be used for a:
+• Redirection attack - redirecting the traffic to another host if the link-layer address exists in the network.
+• DoS attack - sink all traffic if the specified link-layer address does not exist. 
+However, this attack is of limited duration since after 30-50 seconds (with default timer values), the neighbor cache information will expire, discarding the bad link-layer address. The host will try to discover the link-layer address again. As a consequence, the attacker will need to keep responding with fabricated link-layer addresses if they want to maintain the attack beyond the timeout.
+
+By attacking two hosts, an attacker can even achieve a "Man-In-The-Middle" (MITM) attack, making all traffic between the two hosts pass through it.
+--------------------------------------------------------------------------------------------------------
+2. threat   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RECOMENDATIONS
+NDP messages should have a Hop Limit of 255. If a different value is found, then the message should be discarded.
+Almost all the attacks related with NDP need local access to the network by the attacker.
+NDP specification mentions IPsec as a possible security solution, but in practice it is not used. This is because of its complexity and the need of a PKI (Public Key Infrastructure), which is not widely used.
+The IETF tried to provide a solution to NDP security problems with SEND (Secure Neighbor Discovery) [RFC3971(opens in a new tab)]. This is a standardised extension of NDP to provide security. However, it is not widely available so it cannot be used. 
 
 
 
