@@ -1,6 +1,8 @@
 SOLUTION TO ATTACK
 
-1. IP spoofing           - Ingress filtering and uRPF (unicast Reverse Path Forwarding) to avoid packets coming from a network using addresses identified as not being used on the network. 
-2. Covert channel        - type of attack that can use Traffic Class (8 bits) and/or Flow Label (20 bits) to send information against security policies.
-                          Intrusion Detection System (IDS) and Intrusion Prevention System (IPS) to inspect packets. This allows the inspection of traffic and detects unusual or unexpected values in some fields
-df
+1. threat IP spoofing           - Ingress filtering and uRPF (unicast Reverse Path Forwarding) to avoid packets coming from a network using addresses identified as not being used on the network. 
+2. threat Covert channel        - A Covert channel is a type of attack that allows the transfer of information between two network nodes that are not allowed to communicate. In IPv6, the basic headers can be used to create a covert channel sending information within Traffic Class (8 bits) and/or Flow Label (20 bits) fields. Intrusion Detection System (IDS) and Intrusion Prevention System (IPS) to inspect packets. This allows the inspection of traffic and detects unusual or unexpected values in some fields
+3. threat IPv6 header bypass security tools        - using the Traffic Class and Flow Label fields, to send information unnoticed by security tools. 
+4. threat changing the Source Address field        - 
+
+
