@@ -61,6 +61,15 @@ NDP is used on a link for:
 • Address Resolution, the equivalent to ARP in IPv4, used to find out the layer two address that corresponds to an IPv6 address.
 • Address Autoconfiguration introduces the mechanisms needed to allow nodes to automatically configure an address for an interface.
 • Neighbor Unreachability Detection (NUD), used to proactively check if an already known neighbor is still reachable, and refresh its entry in the neighbor cache (link-layer address, etc) before it expires. 
+The Neighbor Cache is a table used by IPv6 nodes [RFC4861(opens in a new tab)] about neighbors who have recently been sent traffic. Each entry in the neighbor cache contains the neighbor’s on-link IPv6 unicast address, the link-layer address, an indication if the neighbor is a router or not, the expiration time of the information, and other useful information.
+
+For all these NDP uses, only five messages are defined: 
+1. Neighbor Solicitation (NS):    Resolves a neighbor's layer 2 address as part of Address Resolution (destination address is unicast) and also for Duplicate Address Detection (DAD).
+2. Neighbor Advertisement (NA):   Answers an NS message. Quickly propagate new information (unsolicited NA).
+3. Router Solicitation (RS) is sent when:   An interface is connected to the network to try to discover if there is any router on the link (router discovery). The destination address used is ff02::2, the multicast address defined for all-routers on the link.
+4. Router Advertisement (RA) is sent to:    Answer an RS message. Inform the hosts in the network  periodically about network information and parameters.
+5. Redirect is used to:                     Change routing entries on hosts, to send all or part of the traffic to another gateway.
+
 
 
 
