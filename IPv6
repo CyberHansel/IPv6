@@ -10,8 +10,15 @@ SOLUTION  -  Intrusion Detection System (IDS) and Intrusion Prevention System (I
 
 
 >>>>>>>>>>>>>>>  IPV6 EXTENSION HEADERS <<<<<<<<<<<<<<
-1. threat         -Routing Header, type 0, also called RH0, Do not use RH0 or do not allow the use of it. This can be achieved by ensuring that your IPv6 nodes follow RFC5095(opens in a new tab), i.e., the support for RH0 is removed. Extra operational measures can be used: Ingress filtering at the site border, and firewall policies that filter packets using RH0.
+
+1. threat Routing Header type 0, RH0 -Do not use RH0 or do not allow the use of it. This can be achieved by ensuring that your IPv6 nodes follow RFC5095(opens in a new tab), i.e., the support for RH0 is removed. Extra operational measures can be used: Ingress filtering at the site border, and firewall policies that filter packets using RH0.
 --------------------------------------------------------------------------------------------------------
+2. threat Bypassing RA Filtering/RA-Guard using any Extension Header      -One possible malicious use of EHs is adding an EH where it is not supposed to be used. For example, if you tailor make an IPv6 packet by adding a Destination Option EH before the ICMPv6 RA message, the mechanisms that filter rogue RAs, like the RA-Guard mechanism, could fail. "While there is currently no legitimate use for IPv6 Extension Headers in ICMPv6 Router Advertisement messages, Neighbor Discovery [RFC4861(opens in a new tab)] implementations allow the use of Extension Headers with these messages, by simply ignoring the received options. Some RA-Guard implementations try to identify ICMPv6 Router Advertisement messages by simply looking at the "Next Header" field of the fixed IPv6 header, rather than following the entire header chain. As a result, such implementations fail to identify any ICMPv6 Router Advertisement messages that include any Extension Headers (for example, a Hop-by-Hop Options header, a Destination Options header, etc.), and can be easily circumvented."
+SOLUTION - The solution is for your security tools to inspect the IPv6 header chain properly.
+--------------------------------------------------------------------------------------------------------
+2. threat Bypassing RA Filtering/RA-Guard using Fragment Extension Header       -attack uses the Fragment header. It depends on the security devices/software putting all fragments together to understand what packet is being sent. This is not easy to do as mechanisms like RA-Guard are implemented in layer 2 devices (switches).
+
+
 
 
 
