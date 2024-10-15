@@ -49,6 +49,19 @@ TWO EXCEPTIONS        of receiving a packet destined to an IPv6 multicast addres
 1 EXCEPTION The Packet Too Big Message [RFC4443_section3.2(opens in a new tab)] to allow Path MTU discovery to work for IPv6 multicast.
 2 EXCEPTION The Parameter Problem Message, Code 2 [RFC4443_section3.4] reporting an unrecognised IPv6 option [RFC2460_section4.2] that has the Option Type highest-order two bits set to 10.
 
+RECPMENDATION 5      -IPv6 node must limit the rate of the ICMPv6 error messages it originates. This situation may occur when a source sending a stream of erroneous packets fails to listen to the resulting ICMPv6 error messages. 
+
+
+>>>>>>>>>>>>>>>  Neighbor Discovery Protocol (NDP) <<<<<<<<<<<<<<
+
+When talking about NDP, it's in the context of a link where attached nodes are neighbors. These nodes could be hosts or routers.
+NDP is used on a link for:
+• Discovery of available routers and the prefixes and network parameters used (like MTU or default Hop Limit).
+• Duplicate Address Detection (DAD), is always used before configuring an address in an interface and to check or verify if the same address is already being used.
+• Address Resolution, the equivalent to ARP in IPv4, used to find out the layer two address that corresponds to an IPv6 address.
+• Address Autoconfiguration introduces the mechanisms needed to allow nodes to automatically configure an address for an interface.
+• Neighbor Unreachability Detection (NUD), used to proactively check if an already known neighbor is still reachable, and refresh its entry in the neighbor cache (link-layer address, etc) before it expires. 
+
 
 
 
