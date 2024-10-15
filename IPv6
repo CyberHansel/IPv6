@@ -82,9 +82,13 @@ For all these NDP uses, only five messages are defined:
 4. Router Advertisement (RA) is sent to:    Answer an RS message. Inform the hosts in the network  periodically about network information and parameters.
 5. Redirect is used to:                     Change routing entries on hosts, to send all or part of the traffic to another gateway.
 
-SECURITY
+SECURITY of different NDP parts
 
-1. threat    Neighbor Solicitation (NS) or Neighbor Advertisement (NA) Spoofing [RFC3756(opens in a new tab)].
+===========================
+NS/NA Threats & Solutions
+===========================
+
+1. threat    Neighbor Solicitation (NS) or Neighbor Advertisement (NA) Spoofing [RFC3756].
 -- The attacker sends an NS with a changed/wrong “source link-layer” option (the option used to inform other neighbors about a link-layer address).
 -- The attacker sends an NA with a changed/wrong “target link-layer” option (the option that includes information about the sender's link-layer).
 The sending of the NA could be after seeing an NS sent by a neighbor, or can even be sent in an unsolicited way to explain about a change in information (this is included in the standard and has to be accepted by IPv6 hosts. It is the same in IPv4 with ARP).
@@ -95,8 +99,30 @@ In both cases, the attacker gets a wrong entry in the victim's neighbor cache, w
 However, this attack is of limited duration since after 30-50 seconds (with default timer values), the neighbor cache information will expire, discarding the bad link-layer address. The host will try to discover the link-layer address again. As a consequence, the attacker will need to keep responding with fabricated link-layer addresses if they want to maintain the attack beyond the timeout.
 
 By attacking two hosts, an attacker can even achieve a "Man-In-The-Middle" (MITM) attack, making all traffic between the two hosts pass through it.
+
+NS SPOOFING - Let’s start with NS Spoofing to change values in the victim's neighbor cache. If the attacker sends an invalid MAC address (not used in the network) then it will be a DoS attack because traffic will reach no destination at all.     This attack, as almost all the attacks related to NDP, need local access to the network by the attacker.    !!!! IMPORTANT !!!!
+
+NA SPOOFING -  based on sending unsolicited NA messages to the victim. 
 --------------------------------------------------------------------------------------------------------
-2. threat   
+2. threat  Neighbor Unreachability Detection (NUD) Failure     -In this DoS attack, an NA message is used by the attacker to add a wrong link-layer address to the victim's neighbor cache during the NUD process. 
+--------------------------------------------------------------------------------------------------------
+3. threat   Duplicate Address Detection DoS Attack      -The attacker can make Duplicate Address Detection on other nodes always result in finding a duplicate address. This means that the host who wants to use an address in an interface will always find it is already in use in the network so it can’t be used. If the attacker keeps sending NS/NAs to each DAD attempt, the victim will not be able to configure any address in their interface (not even a link-local). The result is a DoS attack because the victim will not be able to use any address.
+
+SOLUTIION
+
+SOLUTION 1  -  First Hop Security       -First Hop Security (FHS) are security mechanisms for IPv6 implemented on switches. This means layer 2 devices looking at upper layer information. It is called 'first hop' because switches are usually the first device nodes are connected to. There is a number of different techniques that can be considered FHS. They all provide protection to a link or layer two domain, and they need a switch to support them. List of them:
+
+• IPv6 Snooping (ND inspection + DHCPv6 Snooping)
+This mechanism inspects NDP and DHCPv6 messages, as well as other IPv6 traffic. It collects information about IP and link-layers addresses seen on each interface. This information is used to create a table binding link-layer and IP addresses per switch port. This binding table can then be used to protect against some attacks, filtering messages that an attacker sends pretending to be another host, for example a spoofed NA message. Note that in order to do this, ICMPv6 level information has to be processed.
+
+• IPv6 Source / Prefix Guard
+IPv6 Source/Prefix Guard uses the binding table created by the switch to validate a source address or a prefix of IPv6 traffic sourced from the link. So, in this case, IP layer information is checked against the known information to avoid IP spoofed packets sent from hosts connected to the link. Note that when the binding table is used, the switch will use IPv6 snooping to create it, and then start to provide the IPv6 Source / Prefix Guard protection.
+
+===========================
+RS/RA Threats & Solutions
+===========================
+
+3.2 Malicious Last Hop Router
 
 
 
@@ -111,6 +137,12 @@ By attacking two hosts, an attacker can even achieve a "Man-In-The-Middle" (MITM
 
 
 
+
+
+• IPv6 Destination Guard (or ND Resolution rate limiter)
+• MLD Snooping
+• RA-GUARD
+• DHCPv6 Guard / DHCPv6 Shield
 
 
 RECOMENDATIONS
