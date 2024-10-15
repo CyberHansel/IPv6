@@ -7,10 +7,19 @@ SOLUTION - Ingress Filtering [RFC2827 / BCP38(opens in a new tab)] and unicast R
 --------------------------------------------------------------------------------------------------------
 2. threat Covert channel        - A Covert channel is a type of attack that allows the transfer of information between two network nodes that are not allowed to communicate. In IPv6, the basic headers can be used to create a covert channel sending information within Traffic Class (8 bits) and/or Flow Label (20 bits) fields.  For example, a PDF file can be divided into 28 bits pieces and sent packet by packet to a ready to receive destination, which will put all the pieces together and make the PDF file available in the receiving node.
 SOLUTION  -  Intrusion Detection System (IDS) and Intrusion Prevention System (IPS) can be used to inspect packets. This allows you to inspect traffic and detect unusual or unexpected values in some fields, like for example the values in the flow label, which is expected to be 0 (zero).
---------------------------------------------------------------------------------------------------------
-3. threat IPv6 header bypass security tools        - using the Traffic Class and Flow Label fields, to send information unnoticed by security tools. 
-
 
 
 >>>>>>>>>>>>>>>  IPV6 EXTENSION HEADERS <<<<<<<<<<<<<<
+1. threat         -Routing Header, type 0, also called RH0, Do not use RH0 or do not allow the use of it. This can be achieved by ensuring that your IPv6 nodes follow RFC5095(opens in a new tab), i.e., the support for RH0 is removed. Extra operational measures can be used: Ingress filtering at the site border, and firewall policies that filter packets using RH0.
+--------------------------------------------------------------------------------------------------------
+
+
+
+--- Security Devices / Software must process the Full Chain of Headers
+--- Firewalls must be able to filter based on Extension Headers - Also, firewalls should be able to deal with the “standard” EHs needed and supported by any IPv6 implementation [RFC8200 section 4(opens in a new tab)]: Hop-by-Hop Options, Fragment, Destination Options, Routing, Authentication (AH), Encapsulating Security Payload (ESP). For example, being able to filter packets based on these EHs.
+
+
+FYI - only the source of the packets could fragment packets. This reduces the possibility of attacks based on overlapping fragments or tiny fragments.
+FYI -
+
 
