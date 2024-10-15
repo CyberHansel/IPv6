@@ -1,0 +1,6 @@
+SOLUTION TO ATTACK
+
+1. IP spoofing           - Ingress filtering and uRPF (unicast Reverse Path Forwarding) to avoid packets coming from a network using addresses identified as not being used on the network. 
+2. Covert channel        - type of attack that can use Traffic Class (8 bits) and/or Flow Label (20 bits) to send information against security policies.
+                          Intrusion Detection System (IDS) and Intrusion Prevention System (IPS) to inspect packets. This allows the inspection of traffic and detects unusual or unexpected values in some fields
+df
