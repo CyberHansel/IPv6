@@ -1,8 +1,16 @@
 SOLUTION TO ATTACK
 
-1. threat IP spoofing           - Ingress filtering and uRPF (unicast Reverse Path Forwarding) to avoid packets coming from a network using addresses identified as not being used on the network. 
-2. threat Covert channel        - A Covert channel is a type of attack that allows the transfer of information between two network nodes that are not allowed to communicate. In IPv6, the basic headers can be used to create a covert channel sending information within Traffic Class (8 bits) and/or Flow Label (20 bits) fields. Intrusion Detection System (IDS) and Intrusion Prevention System (IPS) to inspect packets. This allows the inspection of traffic and detects unusual or unexpected values in some fields
-3. threat IPv6 header bypass security tools        - using the Traffic Class and Flow Label fields, to send information unnoticed by security tools. 
-4. threat changing the Source Address field        - 
+>>>>>>>>>>>>>>>  IPV6 BASIC HEADERS <<<<<<<<<<<<<<
 
+1. threat IP spoofing           -Changing IPv6 header Source Address field or IP spoofing. 
+SOLUTION - Ingress Filtering [RFC2827 / BCP38(opens in a new tab)] and unicast Reverse Path Forwarding (uRPF) [RFC3704 / BCP84(opens in a new tab)]. These techniques filter packets received by a router based on their source address, denying packets that come from addresses not to be used on that network.
+--------------------------------------------------------------------------------------------------------
+2. threat Covert channel        - A Covert channel is a type of attack that allows the transfer of information between two network nodes that are not allowed to communicate. In IPv6, the basic headers can be used to create a covert channel sending information within Traffic Class (8 bits) and/or Flow Label (20 bits) fields.  For example, a PDF file can be divided into 28 bits pieces and sent packet by packet to a ready to receive destination, which will put all the pieces together and make the PDF file available in the receiving node.
+SOLUTION  -  Intrusion Detection System (IDS) and Intrusion Prevention System (IPS) can be used to inspect packets. This allows you to inspect traffic and detect unusual or unexpected values in some fields, like for example the values in the flow label, which is expected to be 0 (zero).
+--------------------------------------------------------------------------------------------------------
+3. threat IPv6 header bypass security tools        - using the Traffic Class and Flow Label fields, to send information unnoticed by security tools. 
+
+
+
+>>>>>>>>>>>>>>>  IPV6 EXTENSION HEADERS <<<<<<<<<<<<<<
 
