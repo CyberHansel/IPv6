@@ -1,3 +1,25 @@
+$ sudo apt install thc-ipv6
+$ atk6-alive6 eth0
+
+$ pidof atk6-alive6
+$ sudo tcpdump -i eth0 -w capture.pcap 'pid <PID>'
+$ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 SOLUTION TO ATTACK
 
 >>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<
