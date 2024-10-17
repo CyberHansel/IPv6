@@ -1,10 +1,39 @@
+$ ip -6 neigh show     #show all known IPv6 neighbors from cache
+
+
+$ ping6 FF02::1%ens160        #FF02::1   All Nodes multicast address, Multicast address.ICMPv6 ,sends ping to all nodes in local link.
+$ ping6 FF02::1%ens160        #FF02::2   All Routers multicast address.
+$ ping6 FF02::1%ens160        #FF02::3   All DHCP Servers multicast address.
+
+1. Device connects to IPv6 network and first automatically generates a link-local address by EUI-64 or random. On device you can chose, but often be configured in the device’s network settings.
+2. Neighbor Discovery Protocol (NDP), After generating a link-local address, the node sends a Neighbor Solicitation (NS) message to FF02::1 to discover other devices on the local link.
+3. Any device that receives the NS message and recognizes its own address responds with a Neighbor Advertisement (NA) message that includes its link-layer MAC address.
+4. Before finalizing its link-local address, the node performs Duplicate Address Detection (DAD). It sends NS message (to FF02::1) if any other device is using same address.
+5. Device automatically joins certain multicast groups, example: all-nodes multicast group (FF02::1) 
+6. Device sends Multicast Listener Discovery (MLD)messages to router to formally express its interest in specific multicast groups, so message indicates, that device wants to receive packets sent to that multicast group.
+7. Router Solicitation (RS): If the node needs to obtain additional configuration information (like default gateway settings), it sends a Router Solicitation (RS) message to the multicast address FF02::2 (all-routers).
+8. Router Advertisement (RA): Routers on the local link respond with Router Advertisement (RA) messages, providing necessary configuration details.
+This may include the IPv6 prefix for the network, default gateway, and other parameters.
+
+
+
+
+
+
 $ sudo apt install thc-ipv6
 $ atk6-alive6 eth0
 
-$ pidof atk6-alive6
-$ sudo tcpdump -i eth0 -w capture.pcap 'pid <PID>'
-$ 
-
+#!/bin/bash
+# Start tcpdump to capture all traffic on ens160
+sudo tcpdump -i ens160 -w capture.pcap &
+# Capture the PID of tcpdump
+TCPDUMP_PID=$!
+# Run atk6-alive6 on ens160
+atk6-alive6 ens160
+# After atk6-alive6 finishes, stop tcpdump
+sudo kill $TCPDUMP_PID
+echo "Capture complete. Saved to capture.pcap"
+# To read capture $tcpdump -r capture.pcap
 
 
 
