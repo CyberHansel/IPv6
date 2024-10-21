@@ -1,9 +1,27 @@
-$ ip -6 neigh show     #show all known IPv6 neighbors from cache
+a$ ip -6 neigh show     #show all known IPv6 neighbors from cache
 
 
 $ ping6 FF02::1%ens160        #FF02::1   All Nodes multicast address, Multicast address.ICMPv6 ,sends ping to all nodes in local link.
 $ ping6 FF02::1%ens160        #FF02::2   All Routers multicast address.
 $ ping6 FF02::1%ens160        #FF02::3   All DHCP Servers multicast address.
+ping6 fe80::250:56ff:fe01:304%ens160
+
+
+$ sudo apt install thc-ipv6
+$ atk6-alive6 eth0
+$ nmap -6 -sS fe80::250:56ff:fe01:304%ens160
+$ arp -a | grep 00:50:56:01:03:04                # linux arp table links all known IPv4 addresses to MAC adresses
+$ arp -a | findstr 00-50-56-01-03-04             # for windows arp table
+$ traceroute6 fe80::250:56ff:fe01:304%ens160
+$ ip route (Linux)  or  route print (Windows)    # show default gateway
+$ netstat -rn       or  ip route show            # Provides the routing table, showing default routes and direct connections
+$ sudo arp-scan --localnet
+
+
+
+
+
+
 
 1. Device connects to IPv6 network and first automatically generates a link-local address by EUI-64 or random. On device you can chose, but often be configured in the device’s network settings.
 2. Neighbor Discovery Protocol (NDP), After generating a link-local address, the node sends a Neighbor Solicitation (NS) message to FF02::1 to discover other devices on the local link.
@@ -20,8 +38,7 @@ This may include the IPv6 prefix for the network, default gateway, and other par
 
 
 
-$ sudo apt install thc-ipv6
-$ atk6-alive6 eth0
+
 
 #!/bin/bash
 # Start tcpdump to capture all traffic on ens160
